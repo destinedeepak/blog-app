@@ -10,7 +10,7 @@ export default class Tags extends Component {
         if (!res.ok) throw new Error(res.statusText);
         else return res.json();
       })
-      .then((data) => this.setState({ tags: data.tags }))
+      .then((data) => this.setState({ tags: data.tags.filter(tag=>tag) }))
       .catch((error) => this.setState({ error: 'Not able to fetch data!' }));
   }
   render() {
