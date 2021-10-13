@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { LOGIN_URL } from '../utils/constant';
 import validate from '../utils/validate';
-
-export default class Login extends Component {
+import { withRouter } from 'react-router';
+class Login extends Component {
   state = {
-    email: '',
-    password: '',
+    email: 'username5@gmail.com',
+    password: 'username5',
     errors: {
       email: '',
       password: '',
@@ -13,8 +14,42 @@ export default class Login extends Component {
   handleChange = (event) => {
     let { name, value } = event.target;
     let errors = this.state.errors;
-    validate(errors,name, value);
+    validate(errors, name, value);
     this.setState({ [name]: value });
+  };
+  handleSubmit = (event) => {
+    event.preventDefault();
+    let data = {
+      user: {
+        email: this.state.email,
+        password: this.state.password,
+      },
+    };
+    fetch(LOGIN_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then((errors) => {
+            return Promise.reject(errors);
+          });
+        }
+        return res.json();
+      })
+      .then((user) => {
+        this.props.updateUser(user.user);
+        this.setState({ email: '', password: '' });
+        this.props.history.push('/');
+      })
+      .catch((errors) =>
+        this.setState({
+          errors: { email: 'Email or password is incorrect!' },
+        })
+      );
   };
   render() {
     let { email, password, errors } = this.state;
@@ -22,7 +57,7 @@ export default class Login extends Component {
       <section className="text-center pt-14">
         <h2 className="text-4xl">Sign In</h2>
         <button className="text-primary mt-2">Need an account?</button>
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <input
             onChange={this.handleChange}
             type="text"
@@ -43,9 +78,8 @@ export default class Login extends Component {
           <span className="text-red-500 block">{errors.password}</span>
           <button
             className="bg-primary px-6 py-3 rounded text-white text-lg inline-block ml-108 mt-6 submit"
-            onSubmit={this.handleSubmit}
             type="submit"
-            disabled ={errors.email || errors.password}
+            disabled={errors.email || errors.password}
           >
             Sign In
           </button>
@@ -54,3 +88,5 @@ export default class Login extends Component {
     );
   }
 }
+
+export default withRouter(Login);

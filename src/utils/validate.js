@@ -19,6 +19,22 @@ export default function validate(errors, name, value) {
         value.length < 6 ? 'Username should be at-least 6 characters long' : '';
       errors.username = userNameError;
       break;
+    case 'title':
+      let titleError = value.length === 0 ? 'field can not be empty!' : '';
+      errors.title = titleError;
+      break;
+    case 'description':
+      let descriptionError = value.length === 0 ? 'field can not be empty!' : '';
+      errors.description = descriptionError;
+      break;
+    case 'body':
+      let articleError = value.length === 0 ? 'field can not be empty!' : '';
+      errors.body = articleError;
+      break;
+    case 'tagList':
+      let tagListError = value.length === 0 ? 'field can not be empty!' : '';
+      errors.tagList = tagListError;
+      break;
     default:
       break;
   }

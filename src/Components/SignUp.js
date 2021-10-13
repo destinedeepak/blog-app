@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { SIGNUP_URL } from '../utils/constant';
 import validate from '../utils/validate';
-
-export default class SignUp extends Component {
+import { withRouter } from 'react-router';
+class SignUp extends Component {
   state = {
     username: '',
     email: '',
@@ -18,13 +19,44 @@ export default class SignUp extends Component {
     validate(errors, name, value);
     this.setState({ [name]: value });
   };
+  handleSubmit = (event) => {
+    event.preventDefault();
+    let data = {
+      user: {
+        username: this.state.username,
+        email: this.state.email,
+        password: this.state.password,
+      },
+    };
+    fetch(SIGNUP_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then(({ errors }) => {
+            return Promise.reject(errors);
+          });
+        }
+        return res.json();
+      })
+      .then((user) => {
+        this.props.updateUser(user.user);
+        this.setState({ username: '', email: '', password: '' });
+        this.props.history.push('/');
+      })
+      .catch((errors) => this.setState({ errors }));
+  };
   render() {
     let { username, email, password, errors } = this.state;
     return (
       <section className="text-center pt-14">
         <h2 className="text-4xl">Sign Up</h2>
         <button className="text-primary mt-2">Have an account?</button>
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <input
             onChange={this.handleChange}
             type="text"
@@ -52,9 +84,11 @@ export default class SignUp extends Component {
             value={password}
           />
           <span className="text-red-500 block">{errors.password}</span>
-          <button className="bg-primary px-6 py-3 rounded text-white text-lg inline-block ml-108 mt-6 submit"
-          type="submit"
-          disabled={errors.username || errors.email || errors.password}>
+          <button
+            className="bg-primary px-6 py-3 rounded text-white text-lg inline-block ml-108 mt-6 submit"
+            type="submit"
+            disabled={errors.username || errors.email || errors.password}
+          >
             Sign Up
           </button>
         </form>
@@ -62,3 +96,5 @@ export default class SignUp extends Component {
     );
   }
 }
+
+export default withRouter(SignUp);

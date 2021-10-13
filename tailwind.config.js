@@ -11,7 +11,8 @@ module.exports = {
       backgroundColor: (theme) => ({
         primary: '#5CB85B',
         secondary: '#333333',
-        danger: '#e3342f',
+        tertiary: '#F5F5F5',
+        danger: '#D73D42',
       }),
       borderColor: (theme) => ({
         DEFAULT: theme('colors.gray.300', 'currentColor'),

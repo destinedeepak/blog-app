@@ -4,11 +4,14 @@
 
 @layer utilities {
   body {
-    /* font-family: 'Roboto', sans-serif; */
     font-family: 'Source Sans Pro', sans-serif;
   }
+  .font-roboto {
+    font-family: 'Roboto', sans-serif;
+  }
   .active {
-    color: black;
+    color: green;
+    font-weight: 500;
   }
   .w-132 {
     width: 33rem;
@@ -16,8 +19,8 @@
   .ml-108 {
     margin-left: 27rem;
   }
-  .negmb{
-    margin-bottom:-10px;
+  .neg-mb-10 {
+    margin-bottom: -8px;
   }
   @keyframes bouncing-loader {
     to {
@@ -48,6 +51,6 @@
     animation-delay: 0.4s;
   }
   .submit:disabled {
-    background:gray;
+    background: gray;
   }
 }
