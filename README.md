@@ -12,8 +12,11 @@ https://github.com/destinedeepak/blog-app.git
 ```
 npm install
 ```
-### 3. Start the project
+### 3. Start the project 
 ```
 npm start or npm run start
 ```
-## Usage
+## Live Demo
+```
+https://thirsty-johnson-8b6581.netlify.app/
+```
