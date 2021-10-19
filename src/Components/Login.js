@@ -5,8 +5,8 @@ import { withRouter } from 'react-router';
 import UserContext from './UserContext';
 class Login extends Component {
   state = {
-    email: 'username5@gmail.com',
-    password: 'username5',
+    email: '',
+    password: '',
     errors: {
       email: '',
       password: '',
