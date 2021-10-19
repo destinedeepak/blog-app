@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import UserContext from './UserContext';
 export default function Header(props) {
+  let {isUserLogged} = useContext(UserContext);
   return (
     <header className="px-40 flex justify-between items-center">
       <button className="text-primary font-bold text-2xl py-3">
         <Link to="/">conduit</Link>
       </button>
-      {props.isUserLogged ? (
-        <AuthHeader user={props.user} />
+      {isUserLogged ? (
+        <AuthHeader />
       ) : (
         <NonAuthHeader />
       )}
@@ -38,8 +40,9 @@ function NonAuthHeader() {
 }
 
 function AuthHeader(props) {
+  let {user} = useContext(UserContext);
   return (
-    <div className="font-roboto"> 
+    <div className="font-roboto">
       <button className="text-gray-400 ml-6">
         <NavLink exact activeClassName="active" to="/">
           Home
@@ -58,9 +61,9 @@ function AuthHeader(props) {
       <button className="text-gray-400 ml-6">
         <NavLink
           activeClassName="active"
-          to={`/profile/${props.user.username}`}
+          to={`/profile/${user.username}`}
         >
-          <i className="fas fa-user"></i> {props.user.username}
+          <i className="fas fa-user"></i> {user.username}
         </NavLink>
       </button>
     </div>

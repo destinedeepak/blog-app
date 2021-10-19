@@ -4,8 +4,10 @@ import Loader from './Loader';
 import CommentBox from './CommentBox';
 import { Link, withRouter } from 'react-router-dom';
 import moment from 'moment';
+import UserContext from './UserContext';
 class SinglePost extends Component {
   state = { article: null, error: null };
+  static contextType = UserContext;
   componentDidMount() {
     let slug = this.props.match.params.slug;
     fetch(ARTICLES_URL + '/' + slug)
@@ -21,12 +23,11 @@ class SinglePost extends Component {
       });
   }
   handleDelete = (slug) => {
-    // DELETE /api/articles/:slug
     fetch(ARTICLES_URL + '/' + slug, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Token ' + this.props.user.token,
+        Authorization: 'Token ' + this.context.user.token,
       },
     })
       .then((res) => {
@@ -48,6 +49,7 @@ class SinglePost extends Component {
       );
     if (!this.state.article) return <Loader />;
     let { author, createdAt, title, tagList, body, slug } = this.state.article;
+
     return (
       <section className="px-40">
         <div className="bg-secondary py-8 pl-40 shadow">
@@ -59,12 +61,17 @@ class SinglePost extends Component {
               alt={author.username}
             />
             <div className="ml-1">
-              <h4 className="text-primary neg-mb-10">{author.username}</h4>
+              <h4 className="text-primary neg-mb-10">
+                <Link to={'/profile/' + author.username}>
+                  {author.username}
+                </Link>
+              </h4>
               <time dateTime="" className="text-xs text-gray-400 inline-block">
                 {moment(createdAt).format('ddd MMM D YYYY')}
               </time>
             </div>
-            {this.props.user.username === author.username ? (
+            {this.context.user &&
+            this.context.user.username === author.username ? (
               <div>
                 <button className="border border-gray-400 rounded ml-6 px-3 text-sm py-1 text-gray-400 hover:bg-gray-400 hover:text-white">
                   <Link to={`/edit-article/${slug}`}>
@@ -99,24 +106,20 @@ class SinglePost extends Component {
           </ul>
         </div>
         <div className="border-t border-gray-300 w-full mx-auto mt-8"></div>
-        {!this.props.isUserLogged ? (
+        {!this.context.isUserLogged ? (
           <h4 className="text-center mt-8">
             <Link className="text-primary text-lg" to="/login">
               Sign in
             </Link>{' '}
             or{' '}
-            <Link className="text-primary text-lg" to="/singup">
+            <Link className="text-primary text-lg" to="/signup">
               Sign up
             </Link>{' '}
             to add comments on this article
           </h4>
         ) : (
-          ''
+          <CommentBox slug={this.props.match.params.slug} />
         )}
-        <CommentBox
-          slug={this.props.match.params.slug}
-          user={this.props.user}
-        />
       </section>
     );
   }

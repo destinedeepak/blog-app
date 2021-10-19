@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { PROFILE_URL } from '../utils/constant';
+import UserContext from './UserContext';
 export default class ToggleFollowButton extends Component {
   state = {
     following: null,
     error: null,
   };
+  static contextType = UserContext;
   componentDidMount() {
     this.setState({ following: this.props.profile.following });
   }
@@ -15,7 +17,7 @@ export default class ToggleFollowButton extends Component {
       method,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Token ' + this.props.currentUser.token,
+        Authorization: 'Token ' + this.context.user.token,
       },
     })
       .then((res) => {
@@ -33,7 +35,7 @@ export default class ToggleFollowButton extends Component {
   };
   render() {
     let currentUsername =
-      this.props.currentUser && this.props.currentUser.username;
+      this.context.user && this.context.user.username;
     let { username } = this.props.profile;
     let { error } = this.state;
     if (error)

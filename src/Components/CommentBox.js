@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { ARTICLES_URL } from '../utils/constant';
 import Comment from './Comments';
+import UserContext from './UserContext';
 export default class CommentBox extends Component {
   state = {
     comments: null,
     errors: null,
     body: '',
   };
+  static contextType = UserContext;
   handleChange = (event) => {
     let { name, value } = event.target;
     this.setState({ [name]: value });
@@ -22,7 +24,7 @@ export default class CommentBox extends Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Token ' + this.props.user.token,
+        Authorization: 'Token ' + this.context.user.token,
       },
       body: JSON.stringify(body),
     })
@@ -33,7 +35,10 @@ export default class CommentBox extends Component {
           );
         return res.json();
       })
-      .then(this.fetchComments, this.setState({ body: '' }))
+      .then(() => {
+        this.fetchComments();
+        this.setState({ body: '' });
+      })
       .catch((errors) => {
         this.setState({ errors: errors });
       });
@@ -44,7 +49,7 @@ export default class CommentBox extends Component {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Token ' + this.props.user.token,
+        Authorization: 'Token ' + this.context.user.token,
       },
     })
       .then((res) => {
@@ -92,7 +97,6 @@ export default class CommentBox extends Component {
         </form>
         <Comment
           slug={this.props.slug}
-          user={this.props.user}
           fetchComments={this.fetchComments}
           state={this.state}
         />

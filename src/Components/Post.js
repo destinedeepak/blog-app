@@ -2,19 +2,21 @@ import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import { ARTICLES_URL } from '../utils/constant';
 import moment from 'moment';
+import UserContext from './UserContext';
 
 export default class Post extends Component {
   state = {
     favorited: null,
     favoritesCount: 0,
   };
+  static contextType =UserContext;
   componentDidMount() {
     let { favorited, favoritesCount } = this.props;
     this.setState({ favorited, favoritesCount });
   }
   handleFavorite = (slug) => {
     let method = this.state.favorited ? 'DELETE' : 'POST';
-    let token = this.props.user ? 'Token ' + this.props.user.token : '';
+    let token = this.context.user ? 'Token ' + this.context.user.token : '';
     fetch(ARTICLES_URL + `/${slug}/favorite`, {
       method,
       headers: {
@@ -30,7 +32,7 @@ export default class Post extends Component {
       });
   };
   render() {
-    let { author, createdAt, title, description, tagList, slug, user } =
+    let { author, createdAt, title, description, tagList, slug} =
       this.props;
     let { favoritesCount, favorited } = this.state;
     return (
@@ -44,7 +46,7 @@ export default class Post extends Component {
             />
             <div className="ml-2">
               <h4 className="text-primary neg-mb-10 font-roboto">
-                <Link to={`profile/${author.username}`}>{author.username}</Link>
+                <Link to={`/profile/${author.username}`}>{author.username}</Link>
               </h4>
               <time dateTime="" className="text-xs text-gray-400">
                 {moment(createdAt).format('ddd MMM D YYYY')}
@@ -52,7 +54,7 @@ export default class Post extends Component {
             </div>
           </div>
           <div>
-            {user && (
+            {this.context.user && (
               <button
                 className={`border border-primary rounded py-1 px-2 text-sm shadow ${
                   favorited ? 'bg-primary text-white' : 'bg-white text-primary'

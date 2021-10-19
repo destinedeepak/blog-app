@@ -40,7 +40,7 @@ class Profile extends Component {
     let { username } = this.props.match.params;
     return (
       <section>
-        <ProfileBanner username={username} currentUser={this.props.user} />
+        <ProfileBanner username={username} />
         <ProfileFeedNav
           activeTab={activeTab}
           handleActiveTab={this.handleActiveTab}
