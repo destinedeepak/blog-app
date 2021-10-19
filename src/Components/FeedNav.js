@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
+import UserContext from './UserContext';
 export default class FeedNav extends Component {
+  static contextType = UserContext;
   render() {
     let { activeTag, handleNavigation, activeNav } = this.props;
     return (
       <nav className="mt-8">
         <ul className="border-b flex">
-          {this.props.user && (
+          {this.context.user && (
             <li
-              className={`text-gray-400 px-6 pb-2 ${
+              className={`text-gray-400 px-6 pb-2 cursor-pointer ${
                 !activeTag && activeNav === 'your'
                   ? 'border-b-2 border-green-500'
                   : ''
@@ -20,7 +22,7 @@ export default class FeedNav extends Component {
             </li>
           )}
           <li
-            className={`text-gray-400 px-6 pb-2 ${
+            className={`text-gray-400 px-6 pb-2 cursor-pointer ${
               !activeTag && activeNav === 'global'
                 ? 'border-b-2 border-green-500'
                 : ''
@@ -33,7 +35,7 @@ export default class FeedNav extends Component {
           </li>
           {activeTag && (
             <li
-              className={`text-gray-400 px-6 pb-2 ${
+              className={`text-gray-400 px-6 pb-2 cursor-pointer ${
                 activeTag ? 'border-b-2 border-green-500' : ''
               }`}
             >

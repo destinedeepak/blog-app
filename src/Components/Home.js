@@ -5,6 +5,7 @@ import Tags from './Tags';
 import { ARTICLES_URL } from '../utils/constant';
 import Pagination from './Pagination';
 import FeedNav from './FeedNav';
+import UserContext from './UserContext';
 export default class Home extends Component {
   state = {
     articles: null,
@@ -15,6 +16,7 @@ export default class Home extends Component {
     activeNav: 'global',
     activeTag: '',
   };
+  static contextType = UserContext;
   componentDidMount() {
     this.fetchData();
   }
@@ -38,7 +40,7 @@ export default class Home extends Component {
     const offset = this.state.activePageIndex * 10;
     const tag = this.state.activeTag;
     let feed = this.state.activeNav === 'your' ? '/feed' : '';
-    let token = this.props.user ? 'Token ' + this.props.user.token : '';
+    let token = this.context.user ? 'Token ' + this.context.user.token : '';
     fetch(
       ARTICLES_URL +
         `${feed}/?limit=${limit}
@@ -87,9 +89,8 @@ export default class Home extends Component {
                 activeTag={activeTag}
                 activeNav={activeNav}
                 handleNavigation={this.handleNavigation}
-                user={this.props.user}
               />
-              <Posts {...this.state} user={this.props.user} />
+              <Posts {...this.state} />
             </div>
             <div className="w-3/12 ml-12 mt-4">
               <Tags addTagTab={this.addTagTab} activeTag={activeTag} />

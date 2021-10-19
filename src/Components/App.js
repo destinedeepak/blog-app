@@ -14,6 +14,7 @@ import Loader from './Loader';
 import Profile from './Profile';
 import EditArticle from './EditArticle';
 import ErrorBoundary from './ErrorBoundary';
+import UserContext from './UserContext';
 
 class App extends Component {
   state = {
@@ -58,23 +59,20 @@ class App extends Component {
     let { isUserLogged, user } = this.state;
     return (
       <div>
-        <ErrorBoundary>
-          <Header isUserLogged={isUserLogged} user={user} />
-        </ErrorBoundary>
-        <ErrorBoundary>
-          {this.state.isUserLogged ? (
-            <AuthenticatedApp
-              user={user}
-              isUserLogged={isUserLogged}
-              updateUser={this.updateUser}
-            />
-          ) : (
-            <UnAuthenticatedApp
-              updateUser={this.updateUser}
-              isUserLogged={isUserLogged}
-            />
-          )}
-        </ErrorBoundary>
+        <UserContext.Provider
+          value={{ isUserLogged, user, updateUser: this.updateUser }}
+        >
+          <ErrorBoundary>
+            <Header />
+          </ErrorBoundary>
+          <ErrorBoundary>
+            {this.state.isUserLogged ? (
+              <AuthenticatedApp />
+            ) : (
+              <UnAuthenticatedApp />
+            )}
+          </ErrorBoundary>
+        </UserContext.Provider>
       </div>
     );
   }
@@ -84,22 +82,22 @@ function AuthenticatedApp(props) {
   return (
     <Switch>
       <Route exact path="/">
-        <Home user={props.user} />
+        <Home />
       </Route>
       <Route path="/articles/:slug">
-        <SinglePost isUserLogged={props.isUserLogged} user={props.user} />
+        <SinglePost />
       </Route>
       <Route path="/new-post">
-        <NewPost user={props.user} />
+        <NewPost />
       </Route>
       <Route path="/edit-article/:slug">
-        <EditArticle user={props.user} />
+        <EditArticle />
       </Route>
       <Route path="/setting">
-        <Setting user={props.user} updateUser={props.updateUser} />
+        <Setting />
       </Route>
       <Route path="/profile/:username" exact>
-        <Profile user={props.user} />
+        <Profile />
       </Route>
       <Route path="*">
         <NoMatch />
@@ -111,19 +109,19 @@ function UnAuthenticatedApp(props) {
   return (
     <Switch>
       <Route exact path="/">
-        <Home user={props.user} />
+        <Home />
       </Route>
       <Route path="/articles/:slug">
-        <SinglePost isUserLogged={props.isUserLogged} user={props.user} />
+        <SinglePost />
       </Route>
       <Route path="/login">
-        <Login updateUser={props.updateUser} />
+        <Login />
       </Route>
       <Route path="/signup">
-        <SignUp updateUser={props.updateUser} />
+        <SignUp />
       </Route>
       <Route path="/profile/:username" exact>
-        <Profile user={props.user} />
+        <Profile />
       </Route>
       <Route path="*">
         <NoMatch />

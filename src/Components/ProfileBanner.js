@@ -2,15 +2,18 @@ import React, { Component } from 'react';
 import { PROFILE_URL } from '../utils/constant';
 import ToggleFollowButton from './ToggleFollowButton';
 import Loader from './Loader';
+import UserContext from './UserContext';
 
 export default class ProfileBanner extends Component {
   state = {
     profile: null,
     error: null,
   };
+  static contextType = UserContext;
   componentDidMount() {
-    let { username, currentUser } = this.props;
-    let token = currentUser ? 'Token ' + currentUser.token : '';
+    let {username} = this.props;//username from slug
+    let {user} = this.context;//current user
+    let token = user ? 'Token ' + user.token : '';
     fetch(PROFILE_URL + '/' + username, {
       method: 'GET',
       headers: {
@@ -41,7 +44,6 @@ export default class ProfileBanner extends Component {
         <div className="text-right pr-60">
           <ToggleFollowButton
             profile={this.state.profile}
-            currentUser={this.props.currentUser}
           />
         </div>
       </div>

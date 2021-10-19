@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { LOGIN_URL } from '../utils/constant';
 import validate from '../utils/validate';
 import { withRouter } from 'react-router';
+import UserContext from './UserContext';
 class Login extends Component {
   state = {
     email: 'username5@gmail.com',
@@ -11,6 +12,7 @@ class Login extends Component {
       password: '',
     },
   };
+  static contextType = UserContext;
   handleChange = (event) => {
     let { name, value } = event.target;
     let errors = this.state.errors;
@@ -41,7 +43,7 @@ class Login extends Component {
         return res.json();
       })
       .then((user) => {
-        this.props.updateUser(user.user);
+        this.context.updateUser(user.user);
         this.setState({ email: '', password: '' });
         this.props.history.push('/');
       })

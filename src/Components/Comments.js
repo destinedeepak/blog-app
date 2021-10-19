@@ -2,17 +2,18 @@ import React, { Component } from 'react';
 import Loader from './Loader';
 import Comment from './Comment';
 import { ARTICLES_URL } from '../utils/constant';
+import UserContext from './UserContext';
 export default class Comments extends Component {
+  static contextType = UserContext;
   componentDidMount() {
     this.props.fetchComments();
   }
   handleDelete = (id) => {
-    // DELETE /api/articles/:slug/comments/:id
     fetch(ARTICLES_URL + `/${this.props.slug}/comments/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Token ' + this.props.user.token,
+        Authorization: 'Token ' + this.context.user.token,
       },
     }).then(this.props.fetchComments)
   };
@@ -25,7 +26,7 @@ export default class Comments extends Component {
       );
     if (!this.props.state.comments) return <Loader />;
     return (
-      <ul className="mt-4">
+      <ul className="mt-4 mb-20">
         {this.props.state.comments.map((comment) => {
           console.log(comment);
           return (
@@ -33,7 +34,6 @@ export default class Comments extends Component {
               comment={comment}
               key={comment.id}
               handleDelete={this.handleDelete}
-              user = {this.props.user}
             />
           );
         })}

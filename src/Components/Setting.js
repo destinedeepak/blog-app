@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { CURRENT_USER_URL } from '../utils/constant';
 import validate from '../utils/validate';
+import UserContext from './UserContext';
 
 class Setting extends Component {
   state = {
@@ -18,8 +19,9 @@ class Setting extends Component {
       password: '',
     },
   };
+  static contextType = UserContext;
   componentDidMount() {
-    let { username, email, image, bio } = this.props.user;
+    let { username, email, image, bio } = this.context.user;
     this.setState({ username, email, image, bio });
   }
   handleChange = (event) => {
@@ -48,7 +50,7 @@ class Setting extends Component {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Token ' + this.props.user.token,
+        Authorization: 'Token ' + this.context.user.token,
       },
       body: JSON.stringify(body),
     })
@@ -59,7 +61,7 @@ class Setting extends Component {
         return res.json();
       })
       .then((user) => {
-        this.props.updateUser(user.user);
+        this.context.updateUser(user.user);
         this.props.history.push('/');
       })
       .catch((errors) => {

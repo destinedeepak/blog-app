@@ -1,5 +1,8 @@
 import moment from 'moment';
+import { useContext } from 'react';
+import UserContext from './UserContext';
 export default function Comment(props) {
+  let {user} = useContext(UserContext);
   let { id, author, body, createdAt } = props.comment;
   return (
     <li className="bg-tertiary border rounded border-gray-200 mb-4">
@@ -18,7 +21,7 @@ export default function Comment(props) {
             {moment(createdAt).format('ddd MMM D YYYY')}
           </span>
         </div>
-        {author.username === props.user.username ? (
+        {author.username === user.username ? (
           <button
             className="text-gray-400 text-sm px-2 rounded hover:bg-gray-400 p-1 hover:text-black"
             onClick={() => {
